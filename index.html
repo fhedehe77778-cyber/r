@@ -263,7 +263,13 @@
 </div>
 
 <script>
-// ========== محرك التشفير ==========
+// ========== محرك التشفير - النسخة المصححة نهائياً ==========
+
+// توليد حروف عشوائية لبداية أسماء المتغيرات (لضمان أنها تبدأ بحرف)
+function randomLetter() {
+  const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  return letters[Math.floor(Math.random() * letters.length)];
+}
 
 function generateRandomKey(length = 32) {
   const array = new Uint8Array(length);
@@ -312,38 +318,50 @@ function buildLuaPayload(numbers, keyHex) {
   const keyArr = keyHex.match(/.{1,2}/g).map(h => parseInt(h, 16));
   const keyLen = keyArr.length;
   
+  // أسماء متغيرات تبدأ بحرف دائماً (الحل النهائي)
+  const N = randomLetter() + keyHex.slice(0, 6).replace(/[^a-z0-9]/gi, 'x');
+  const K = randomLetter() + keyHex.slice(6, 12).replace(/[^a-z0-9]/gi, 'x');
+  const B = randomLetter() + keyHex.slice(12, 18).replace(/[^a-z0-9]/gi, 'x');
+  const O = randomLetter() + keyHex.slice(18, 24).replace(/[^a-z0-9]/gi, 'x');
+  const D = randomLetter() + keyHex.slice(24, 30).replace(/[^a-z0-9]/gi, 'x');
+  const F = randomLetter() + keyHex.slice(0, 6).replace(/[^a-z0-9]/gi, 'x') + "a";
+  
   return `--[[ Protected by Advanced Lua Encryptor ]]
-local _N = {${numsStr}}
-local _K = {${keyArr.join(',')}}
-local _KL = ${keyLen}
+local ${N} = {${numsStr}}
+local ${K} = {${keyArr.join(',')}}
+local _KL_${N} = ${keyLen}
 
-local _B = {}
-for i = 1, #_N do
-    local v = _N[i] - 1000000000
-    _B[(i-1)*4+1] = math.floor(v / 16777216) % 256
-    _B[(i-1)*4+2] = math.floor(v / 65536) % 256
-    _B[(i-1)*4+3] = math.floor(v / 256) % 256
-    _B[(i-1)*4+4] = v % 256
+local ${B} = {}
+for i = 1, #${N} do
+    local v = ${N}[i] - 1000000000
+    ${B}[(i-1)*4+1] = math.floor(v / 16777216) % 256
+    ${B}[(i-1)*4+2] = math.floor(v / 65536) % 256
+    ${B}[(i-1)*4+3] = math.floor(v / 256) % 256
+    ${B}[(i-1)*4+4] = v % 256
 end
 
-local _out = {}
-for i = 1, #_B do
-    local b = _B[i]
+local ${O} = {}
+for i = 1, #${B} do
+    local b = ${B}[i]
     b = ((b >> 3) | (b << 5)) & 0xFF
-    b = b ~ _K[((i-1) % _KL) + 1]
+    b = b ~ ${K}[((i-1) % _KL_${N}) + 1]
     b = b ~ ((i * 17) % 256)
     b = (b - ((i * 31) % 256)) % 256
-    _out[i] = string.char(b)
+    ${O}[i] = string.char(b)
 end
 
-local _decoded = table.concat(_out)
-_decoded = _decoded:gsub("%z+$", "")
+local ${D} = table.concat(${O})
 
-local _fn = loadstring or load
-if _fn then
-    pcall(function() _fn(_decoded)() end)
+local ${F} = loadstring or load
+if ${F} then
+    local ok, err = pcall(function()
+        ${F}(${D})()
+    end)
+    if not ok then
+        warn("[Protected Script Error]: " .. tostring(err))
+    end
 else
-    error("No loadstring")
+    error("Executor does not support loadstring")
 end
 `;
 }
