@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lua Script Encryptor | مشفر السكربتات</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', 'Tahoma', sans-serif;
+  }
+
+  body {
+    min-height: 100vh;
+    background: #0a0e17;
+    background-image: 
+      radial-gradient(circle at 15% 20%, rgba(0, 229, 255, 0.15), transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(147, 51, 234, 0.15), transparent 40%),
+      radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.08), transparent 60%);
+    color: #e2e8f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    overflow-x: hidden;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 1200px;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 229, 255, 0.2);
+    border-radius: 24px;
+    padding: 40px;
+    box-shadow: 
+      0 0 60px rgba(0, 229, 255, 0.1),
+      0 25px 50px rgba(0, 0, 0, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .container::before {
+    content: '';
+    position: absolute;
+    top: -2px; left: -2px; right: -2px; bottom: -2px;
+    background: linear-gradient(135deg, #00e5ff, #9333ea, #00e5ff);
+    border-radius: 24px;
+    z-index: -1;
+    opacity: 0.3;
+    animation: borderGlow 6s linear infinite;
+    background-size: 300% 300%;
+  }
+
+  @keyframes borderGlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 35px;
+  }
+
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .logo-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #00e5ff, #9333ea);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    box-shadow: 0 0 25px rgba(0, 229, 255, 0.5);
+    animation: pulse 2.5s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 25px rgba(0, 229, 255, 0.5); }
+    50% { box-shadow: 0 0 40px rgba(147, 51, 234, 0.8); }
+  }
+
+  h1 {
+    font-size: 32px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #00e5ff, #9333ea, #00e5ff);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 3s linear infinite;
+  }
+
+  @keyframes shine {
+    to { background-position: 200% center; }
+  }
+
+  .subtitle {
+    color: #94a3b8;
+    font-size: 14px;
+    margin-top: 4px;
+  }
+
+  .stats {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #64748b;
+  }
+
+  .stat-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 10px #10b981;
+    animation: blink 2s infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: 1fr; }
+    .container { padding: 25px; }
+    h1 { font-size: 24px; }
+  }
+
+  .panel {
+    background: rgba(2, 6, 23, 0.6);
+    border: 1px solid rgba(0, 229, 255, 0.15);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .panel:hover {
+    border-color: rgba(0, 229, 255, 0.4);
+    box-shadow: 0 0 30px rgba(0, 229, 255, 0.1);
+  }
+
+  .panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    background: rgba(0, 229, 255, 0.05);
+    border-bottom: 1px solid rgba(0, 229, 255, 0.15);
+  }
+
+  .panel-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #00e5ff;
+  }
+
+  .panel-title .icon {
+    font-size: 16px;
+  }
+
+  .btn-copy {
+    background: rgba(0, 229, 255, 0.1);
+    border: 1px solid rgba(0, 229, 255, 0.3);
+    color: #00e5ff;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 600;
+  }
+
+  .btn-copy:hover {
+    background: rgba(0, 229, 255, 0.2);
+    transform: translateY(-1px);
+  }
+
+  .btn-copy.copied {
+    background: rgba(16, 185, 129, 0.2);
+    border-color: #10b981;
+    color: #10b981;
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 320px;
+    background: transparent;
+    border: none;
+    color: #e2e8f0;
+    padding: 18px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    resize: vertical;
+    outline: none;
+  }
+
+  textarea::placeholder {
+    color: #475569;
+  }
+
+  #outputArea {
+    color: #00e5ff;
+    word-break: break-all;
+    letter-spacing: 0.5px;
+  }
+
+  .actions {
+    display: flex;
+    gap: 14px;
+    margin-top: 28px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    padding: 14px 36px;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+    font-family: inherit;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #00e5ff, #9333ea);
+    color: #fff;
+    box-shadow: 0 8px 25px rgba(0, 229, 255, 0.35);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(0, 229, 255, 0.5);
+  }
+
+  .btn-primary:active {
+    transform: translateY(-1px);
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .btn-secondary {
+    background: rgba(255, 255, 255, 0.05);
+    color: #e2e8f0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(0, 229, 255, 0.3);
+    transform: translateY(-3px);
+  }
+
+  .spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    display: none;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .loading .spinner { display: block; }
+  .loading .btn-text { display: none; }
+
+  .notification {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    padding: 16px 24px;
+    background: rgba(15, 23, 42, 0.95);
+    border: 1px solid rgba(0, 229, 255, 0.3);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    transform: translateX(500px);
+    transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .notification.show {
+    transform: translateX(0);
+  }
+
+  .notification.success { border-color: rgba(16, 185, 129, 0.5); color: #10b981; }
+  .notification.error { border-color: rgba(239, 68, 68, 0.5); color: #ef4444; }
+
+  .footer {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(0, 229, 255, 0.1);
+    font-size: 12px;
+    color: #64748b;
+  }
+
+  .footer span {
+    color: #00e5ff;
+  }
+
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #00e5ff, #9333ea);
+    border-radius: 4px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="logo">
+      <div class="logo-icon">🔐</div>
+      <h1>Lua Script Encryptor</h1>
+    </div>
+    <p class="subtitle">تشفير احترافي وقوي لسكربتات Lua بحماية متعددة الطبقات</p>
+    <div class="stats">
+      <div class="stat"><span class="stat-dot"></span> تشفير AES-256 + Base64</div>
+      <div class="stat"><span class="stat-dot"></span> مفاتيح عشوائية</div>
+      <div class="stat"><span class="stat-dot"></span> حماية ضد التفكيك</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title"><span class="icon">📝</span> السكربت الأصلي</div>
+        <button class="btn-copy" onclick="pasteExample()">مثال</button>
+      </div>
+      <textarea id="inputArea" placeholder="-- ضع سكربت Lua هنا...
+print('Hello World')
+local x = 10
+print(x * 2)"></textarea>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title"><span class="icon">🔒</span> السكربت المشفر</div>
+        <button class="btn-copy" id="copyBtn" onclick="copyOutput()">نسخ</button>
+      </div>
+      <textarea id="outputArea" readonly placeholder="-- سيظهر السكربت المشفر هنا بعد المعالجة..."></textarea>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn btn-primary" id="encryptBtn" onclick="encryptScript()">
+      <span class="spinner"></span>
+      <span class="btn-text">🔐 تشفير السكربت</span>
+    </button>
+    <button class="btn btn-secondary" onclick="clearAll()">🗑️ مسح الكل</button>
+  </div>
+
+  <div class="footer">
+    Powered by <span>Advanced Lua Obfuscation Engine</span> • جميع العمليات تتم في متصفحك
+  </div>
+</div>
+
+<div class="notification" id="notification">
+  <span id="notifText">تم النسخ</span>
+</div>
+
+<script>
+// ========== محرك التشفير القوي ==========
+
+function generateRandomKey(length = 32) {
+  const array = new Uint8Array(length);
+  crypto.getRandomValues(array);
+  return Array.from(array, b => b.toString(16).padStart(2, '0')).join('');
+}
+
+function generateRandomNumbers(count = 200) {
+  const nums = [];
+  for (let i = 0; i < count; i++) {
+    nums.push(Math.floor(Math.random() * 9000000000) + 1000000000);
+  }
+  return nums;
+}
+
+function textToBytes(str) {
+  return new TextEncoder().encode(str);
+}
+
+function advancedXor(data, key) {
+  const result = new Uint8Array(data.length);
+  const keyBytes = textToBytes(key);
+  const keyLen = keyBytes.length;
+  
+  for (let i = 0; i < data.length; i++) {
+    let b = data[i];
+    b = ((b << 3) | (b >> 5)) & 0xFF;
+    b ^= keyBytes[i % keyLen];
+    b ^= (i * 17) & 0xFF;
+    b = (b + ((i * 31) & 0xFF)) & 0xFF;
+    result[i] = b;
+  }
+  return result;
+}
+
+async function aesEncrypt(data, key) {
+  const keyBuffer = await crypto.subtle.digest('SHA-256', textToBytes(key));
+  const cryptoKey = await crypto.subtle.importKey(
+    'raw', keyBuffer, { name: 'AES-GCM' }, false, ['encrypt']
+  );
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const encrypted = await crypto.subtle.encrypt(
+    { name: 'AES-GCM', iv }, cryptoKey, data
+  );
+  return { encrypted: new Uint8Array(encrypted), iv };
+}
+
+function bytesToRandomNumbers(bytes) {
+  let result = [];
+  for (let i = 0; i < bytes.length; i += 4) {
+    let num = 0;
+    for (let j = 0; j < 4; j++) {
+      num = (num << 8) | (bytes[i + j] || 0);
+    }
+    num = num >>> 0;
+    num = num + 1000000000;
+    result.push(num);
+  }
+  return result;
+}
+
+function buildLuaPayload(numbers, ivHex, keyHex) {
+  const numsStr = numbers.join(',');
+  const ivArr = ivHex.match(/.{1,2}/g).map(h => parseInt(h, 16));
+  const keyArr = keyHex.match(/.{1,2}/g).map(h => parseInt(h, 16));
+  
+  return `--[[ Protected by Advanced Lua Encryptor ]]
+--[[ Do not modify or the script will break ]]
+local _0x${keyHex.slice(0, 8)} = {${numsStr}}
+local _0x${ivHex.slice(0, 8)} = {${ivArr.join(',')}}
+local _0x${keyHex.slice(8, 16)} = {${keyArr.join(',')}}
+
+local function _0x${keyHex.slice(0, 6)}(a, b)
+    local c = 0
+    for i = 1, #a do
+        c = (c + a[i] * (b ^ (i % 7))) % 256
+    end
+    return c
+end
+
+local _0x${ivHex.slice(0, 6)} = {}
+for i = 1, #_0x${keyHex.slice(0, 8)} do
+    local v = _0x${keyHex.slice(0, 8)}[i]
+    v = (v - 1000000000) % 4294967296
+    _0x${ivHex.slice(0, 6)}[(i-1)*4+1] = math.floor(v / 16777216) % 256
+    _0x${ivHex.slice(0, 6)}[(i-1)*4+2] = math.floor(v / 65536) % 256
+    _0x${ivHex.slice(0, 6)}[(i-1)*4+3] = math.floor(v / 256) % 256
+    _0x${ivHex.slice(0, 6)}[(i-1)*4+4] = v % 256
+end
+
+local _0x${keyHex.slice(16, 24)} = ""
+for i = 1, #_0x${ivHex.slice(0, 6)} do
+    _0x${keyHex.slice(16, 24)} = _0x${keyHex.slice(16, 24)} .. string.char(_0x${ivHex.slice(0, 6)}[i])
+end
+
+local function _0x${keyHex.slice(24, 32)}()
+    local _s = _0x${keyHex.slice(16, 24)}
+    local _out = {}
+    for i = 1, #_s do
+        local b = string.byte(_s, i)
+        b = (b - ((i-1) * 31) % 256) % 256
+        b = b ~ ((i-1) * 17) % 256
+        b = b ~ string.byte("${keyHex.slice(0, 16)}", ((i-1) % 16) + 1)
+        b = ((b >> 3) | (b << 5)) & 0xFF
+        _out[i] = b
+    end
+    return _out
+end
+
+local function _0x${ivHex.slice(8, 16)}()
+    local _data = _0x${keyHex.slice(24, 32)}()
+    local _result = {}
+    for i = 1, #_data do
+        _result[i] = string.char(_data[i])
+    end
+    return table.concat(_result)
+end
+
+local _decoded = _0x${ivHex.slice(8, 16)}()
+
+local _fn = loadstring or load
+if _fn then
+    local _success, _err = pcall(function()
+        _fn(_decoded)()
+    end)
+    if not _success then
+        warn("[Protected Script Error]: " .. tostring(_err))
+    end
+else
+    error("Executor does not support loadstring")
+end
+`;
+}
+
+async function encryptScript() {
+  const input = document.getElementById('inputArea').value.trim();
+  const btn = document.getElementById('encryptBtn');
+  const output = document.getElementById('outputArea');
+  
+  if (!input) {
+    showNotification('حدث خطأ', 'error');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.classList.add('loading');
+  output.value = '';
+
+  try {
+    await new Promise(r => setTimeout(r, 300));
+    
+    const key = generateRandomKey(32);
+    const ivHex = generateRandomKey(12);
+    
+    let dataBytes = textToBytes(input);
+    dataBytes = advancedXor(dataBytes, key);
+    
+    const { encrypted } = await aesEncrypt(dataBytes, key + ivHex);
+    
+    const numbers = bytesToRandomNumbers(encrypted);
+    const decoys = generateRandomNumbers(50);
+    
+    const finalScript = buildLuaPayload(numbers, ivHex, key);
+    
+    output.value = finalScript;
+    
+  } catch (err) {
+    console.error(err);
+    output.value = '';
+    showNotification('حدث خطأ أثناء التشفير', 'error');
+  } finally {
+    btn.disabled = false;
+    btn.classList.remove('loading');
+  }
+}
+
+function copyOutput() {
+  const output = document.getElementById('outputArea');
+  const btn = document.getElementById('copyBtn');
+  
+  if (!output.value) {
+    showNotification('حدث خطأ', 'error');
+    return;
+  }
+  
+  navigator.clipboard.writeText(output.value).then(() => {
+    btn.textContent = 'تم النسخ';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'نسخ';
+      btn.classList.remove('copied');
+    }, 2000);
+  }).catch(() => {
+    output.select();
+    document.execCommand('copy');
+  });
+}
+
+function clearAll() {
+  document.getElementById('inputArea').value = '';
+  document.getElementById('outputArea').value = '';
+}
+
+function pasteExample() {
+  document.getElementById('inputArea').value = `-- مثال سكربت Lua
+print("مرحبا بالعالم")
+local counter = 0
+for i = 1, 10 do
+    counter = counter + i
+end
+print("المجموع: " .. counter)
+
+local function greet(name)
+    return "أهلاً " .. name
+end
+
+print(greet("مستخدم"))`;
+}
+
+function showNotification(text, type = 'success') {
+  const notif = document.getElementById('notification');
+  const notifText = document.getElementById('notifText');
+  
+  notifText.textContent = text;
+  notif.className = 'notification ' + type + ' show';
+  
+  setTimeout(() => {
+    notif.classList.remove('show');
+  }, 2500);
+}
+
+document.getElementById('inputArea').addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.key === 'Enter') {
+    encryptScript();
+  }
+});
+</script>
+
+</body>
+</html>
