@@ -3,47 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lua Script Encryptor | مشفر السكربتات</title>
+<title>Lua Script Encryptor</title>
 <style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', 'Tahoma', sans-serif;
-  }
-
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', 'Tahoma', sans-serif; }
   body {
     min-height: 100vh;
     background: #0a0705;
     background-image: 
       radial-gradient(circle at 15% 20%, rgba(180, 120, 60, 0.18), transparent 40%),
-      radial-gradient(circle at 85% 80%, rgba(120, 70, 30, 0.18), transparent 40%),
-      radial-gradient(circle at 50% 50%, rgba(80, 50, 20, 0.1), transparent 60%);
+      radial-gradient(circle at 85% 80%, rgba(120, 70, 30, 0.18), transparent 40%);
     color: #e8dcc8;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 20px;
-    overflow-x: hidden;
   }
-
   .container {
     width: 100%;
     max-width: 1200px;
     background: rgba(20, 15, 10, 0.85);
     backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(180, 120, 60, 0.25);
     border-radius: 24px;
     padding: 40px;
-    box-shadow: 
-      0 0 60px rgba(180, 120, 60, 0.12),
-      0 25px 50px rgba(0, 0, 0, 0.7),
-      inset 0 1px 0 rgba(255, 220, 180, 0.05);
+    box-shadow: 0 0 60px rgba(180, 120, 60, 0.12), 0 25px 50px rgba(0, 0, 0, 0.7);
     position: relative;
-    overflow: hidden;
   }
-
   .container::before {
     content: '';
     position: absolute;
@@ -55,43 +40,26 @@
     animation: borderGlow 6s linear infinite;
     background-size: 300% 300%;
   }
-
   @keyframes borderGlow {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
   }
-
-  .header {
-    text-align: center;
-    margin-bottom: 35px;
-  }
-
-  .logo {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 12px;
-  }
-
+  .header { text-align: center; margin-bottom: 35px; }
+  .logo { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 12px; }
   .logo-icon {
-    width: 50px;
-    height: 50px;
+    width: 50px; height: 50px;
     background: linear-gradient(135deg, #b4783c, #6b4423);
     border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     font-size: 26px;
     box-shadow: 0 0 25px rgba(180, 120, 60, 0.5);
     animation: pulse 2.5s ease-in-out infinite;
   }
-
   @keyframes pulse {
     0%, 100% { box-shadow: 0 0 25px rgba(180, 120, 60, 0.5); }
     50% { box-shadow: 0 0 40px rgba(107, 68, 35, 0.8); }
   }
-
   h1 {
     font-size: 32px;
     font-weight: 700;
@@ -102,59 +70,24 @@
     -webkit-text-fill-color: transparent;
     animation: shine 3s linear infinite;
   }
-
-  @keyframes shine {
-    to { background-position: 200% center; }
-  }
-
-  .subtitle {
-    color: #a89880;
-    font-size: 14px;
-    margin-top: 4px;
-  }
-
-  .stats {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    margin-top: 18px;
-    flex-wrap: wrap;
-  }
-
-  .stat {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    color: #8a7a60;
-  }
-
+  @keyframes shine { to { background-position: 200% center; } }
+  .subtitle { color: #a89880; font-size: 14px; margin-top: 4px; }
+  .stats { display: flex; justify-content: center; gap: 30px; margin-top: 18px; flex-wrap: wrap; }
+  .stat { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #8a7a60; }
   .stat-dot {
-    width: 8px;
-    height: 8px;
+    width: 8px; height: 8px;
     border-radius: 50%;
     background: #b4783c;
     box-shadow: 0 0 10px #b4783c;
     animation: blink 2s infinite;
   }
-
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
-  }
-
-  .grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-  }
-
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
   @media (max-width: 900px) {
     .grid { grid-template-columns: 1fr; }
     .container { padding: 25px; }
     h1 { font-size: 24px; }
   }
-
   .panel {
     background: rgba(15, 10, 5, 0.7);
     border: 1px solid rgba(180, 120, 60, 0.2);
@@ -162,12 +95,10 @@
     overflow: hidden;
     transition: all 0.3s ease;
   }
-
   .panel:hover {
     border-color: rgba(180, 120, 60, 0.5);
     box-shadow: 0 0 30px rgba(180, 120, 60, 0.15);
   }
-
   .panel-header {
     display: flex;
     align-items: center;
@@ -176,20 +107,10 @@
     background: rgba(180, 120, 60, 0.08);
     border-bottom: 1px solid rgba(180, 120, 60, 0.2);
   }
-
   .panel-title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 14px;
-    font-weight: 600;
-    color: #d4a574;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 14px; font-weight: 600; color: #d4a574;
   }
-
-  .panel-title .icon {
-    font-size: 16px;
-  }
-
   .btn-copy {
     background: rgba(180, 120, 60, 0.12);
     border: 1px solid rgba(180, 120, 60, 0.35);
@@ -201,18 +122,8 @@
     transition: all 0.2s;
     font-weight: 600;
   }
-
-  .btn-copy:hover {
-    background: rgba(180, 120, 60, 0.25);
-    transform: translateY(-1px);
-  }
-
-  .btn-copy.copied {
-    background: rgba(180, 120, 60, 0.3);
-    border-color: #d4a574;
-    color: #f0d9b5;
-  }
-
+  .btn-copy:hover { background: rgba(180, 120, 60, 0.25); transform: translateY(-1px); }
+  .btn-copy.copied { background: rgba(180, 120, 60, 0.3); border-color: #d4a574; }
   textarea {
     width: 100%;
     min-height: 320px;
@@ -226,25 +137,9 @@
     resize: vertical;
     outline: none;
   }
-
-  textarea::placeholder {
-    color: #5a4a35;
-  }
-
-  #outputArea {
-    color: #d4a574;
-    word-break: break-all;
-    letter-spacing: 0.5px;
-  }
-
-  .actions {
-    display: flex;
-    gap: 14px;
-    margin-top: 28px;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
+  textarea::placeholder { color: #5a4a35; }
+  #outputArea { color: #d4a574; word-break: break-all; }
+  .actions { display: flex; gap: 14px; margin-top: 28px; justify-content: center; flex-wrap: wrap; }
   .btn {
     padding: 14px 36px;
     border: none;
@@ -256,88 +151,49 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    position: relative;
-    overflow: hidden;
     font-family: inherit;
   }
-
   .btn-primary {
     background: linear-gradient(135deg, #b4783c, #6b4423);
     color: #fff;
     box-shadow: 0 8px 25px rgba(180, 120, 60, 0.4);
   }
-
-  .btn-primary:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 35px rgba(180, 120, 60, 0.6);
-  }
-
-  .btn-primary:active {
-    transform: translateY(-1px);
-  }
-
-  .btn-primary:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-  }
-
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 35px rgba(180, 120, 60, 0.6); }
+  .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
   .btn-secondary {
     background: rgba(255, 220, 180, 0.05);
     color: #e8dcc8;
     border: 1px solid rgba(180, 120, 60, 0.2);
   }
-
-  .btn-secondary:hover {
-    background: rgba(180, 120, 60, 0.15);
-    border-color: rgba(180, 120, 60, 0.5);
-    transform: translateY(-3px);
-  }
-
+  .btn-secondary:hover { background: rgba(180, 120, 60, 0.15); transform: translateY(-3px); }
   .spinner {
-    width: 18px;
-    height: 18px;
+    width: 18px; height: 18px;
     border: 2px solid rgba(255, 255, 255, 0.3);
     border-top-color: #fff;
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
     display: none;
   }
-
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
-
+  @keyframes spin { to { transform: rotate(360deg); } }
   .loading .spinner { display: block; }
   .loading .btn-text { display: none; }
-
   .notification {
     position: fixed;
-    top: 30px;
-    right: 30px;
+    top: 30px; right: 30px;
     padding: 16px 24px;
     background: rgba(20, 15, 10, 0.98);
     border: 1px solid rgba(180, 120, 60, 0.4);
     border-radius: 12px;
     backdrop-filter: blur(10px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
     transform: translateX(500px);
     transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     z-index: 1000;
-    display: flex;
-    align-items: center;
-    gap: 12px;
     font-size: 14px;
     font-weight: 600;
   }
-
-  .notification.show {
-    transform: translateX(0);
-  }
-
+  .notification.show { transform: translateX(0); }
   .notification.success { border-color: rgba(180, 120, 60, 0.6); color: #d4a574; }
   .notification.error { border-color: rgba(180, 80, 60, 0.6); color: #d47a5c; }
-
   .footer {
     text-align: center;
     margin-top: 30px;
@@ -346,11 +202,7 @@
     font-size: 12px;
     color: #8a7a60;
   }
-
-  .footer span {
-    color: #d4a574;
-  }
-
+  .footer span { color: #d4a574; }
   ::-webkit-scrollbar { width: 8px; }
   ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.3); }
   ::-webkit-scrollbar-thumb {
@@ -369,7 +221,7 @@
     </div>
     <p class="subtitle">تشفير احترافي وقوي لسكربتات Lua بحماية متعددة الطبقات</p>
     <div class="stats">
-      <div class="stat"><span class="stat-dot"></span> تشفير XOR متعدد الطبقات</div>
+      <div class="stat"><span class="stat-dot"></span> تشفير XOR + Base64</div>
       <div class="stat"><span class="stat-dot"></span> مفاتيح عشوائية</div>
       <div class="stat"><span class="stat-dot"></span> حماية ضد التفكيك</div>
     </div>
@@ -378,21 +230,18 @@
   <div class="grid">
     <div class="panel">
       <div class="panel-header">
-        <div class="panel-title"><span class="icon">📝</span> السكربت الأصلي</div>
+        <div class="panel-title"><span>📝</span> السكربت الأصلي</div>
         <button class="btn-copy" onclick="pasteExample()">مثال</button>
       </div>
-      <textarea id="inputArea" placeholder="-- ضع سكربت Lua هنا...
-print('Hello World')
-local x = 10
-print(x * 2)"></textarea>
+      <textarea id="inputArea" placeholder="-- ضع سكربت Lua هنا..."></textarea>
     </div>
 
     <div class="panel">
       <div class="panel-header">
-        <div class="panel-title"><span class="icon">🔒</span> السكربت المشفر</div>
+        <div class="panel-title"><span>🔒</span> السكربت المشفر</div>
         <button class="btn-copy" id="copyBtn" onclick="copyOutput()">نسخ</button>
       </div>
-      <textarea id="outputArea" readonly placeholder="-- سيظهر السكربت المشفر هنا بعد المعالجة..."></textarea>
+      <textarea id="outputArea" readonly placeholder="-- سيظهر السكربت المشفر هنا..."></textarea>
     </div>
   </div>
 
@@ -405,7 +254,7 @@ print(x * 2)"></textarea>
   </div>
 
   <div class="footer">
-    Powered by <span>Advanced Lua Obfuscation Engine</span> • جميع العمليات تتم في متصفحك
+    Powered by <span>Advanced Lua Obfuscation Engine</span>
   </div>
 </div>
 
@@ -414,21 +263,19 @@ print(x * 2)"></textarea>
 </div>
 
 <script>
-// ========== محرك التشفير - نسخة نهائية مصححة 100% ==========
+// ========== محرك التشفير ==========
 
-// توليد مفتاح عشوائي بطول محدد
 function generateRandomKey(length = 32) {
   const array = new Uint8Array(length);
   crypto.getRandomValues(array);
   return Array.from(array, b => b.toString(16).padStart(2, '0')).join('');
 }
 
-// تحويل النص إلى مصفوفة بايتات (UTF-8)
 function textToBytes(str) {
   return new TextEncoder().encode(str);
 }
 
-// تشفير XOR متقدم - الترتيب مهم جداً لأن Lua سيعكسه
+// تشفير XOR
 function advancedXor(data, key) {
   const result = new Uint8Array(data.length);
   const keyBytes = textToBytes(key);
@@ -436,23 +283,16 @@ function advancedXor(data, key) {
   
   for (let i = 0; i < data.length; i++) {
     let b = data[i];
-    const idx = i + 1; // نستخدم 1-based لأن Lua يبدأ من 1
-    
-    // 1. إضافة
+    const idx = i + 1;
     b = (b + ((idx * 31) & 0xFF)) & 0xFF;
-    // 2. XOR مع الموقع
     b ^= (idx * 17) & 0xFF;
-    // 3. XOR مع المفتاح
     b ^= keyBytes[i % keyLen];
-    // 4. تدوير البتات يساراً 3
     b = ((b << 3) | (b >> 5)) & 0xFF;
-    
     result[i] = b;
   }
   return result;
 }
 
-// تحويل البايتات إلى أرقام عشرية طويلة
 function bytesToNumbers(bytes) {
   const result = [];
   for (let i = 0; i < bytes.length; i += 4) {
@@ -467,20 +307,16 @@ function bytesToNumbers(bytes) {
   return result;
 }
 
-// بناء سكربت Lua النهائي - دالة فك التشفير الكاملة
 function buildLuaPayload(numbers, keyHex) {
   const numsStr = numbers.join(',');
   const keyArr = keyHex.match(/.{1,2}/g).map(h => parseInt(h, 16));
   const keyLen = keyArr.length;
   
   return `--[[ Protected by Advanced Lua Encryptor ]]
---[[ Do not modify or the script will break ]]
-
 local _N = {${numsStr}}
 local _K = {${keyArr.join(',')}}
 local _KL = ${keyLen}
 
--- استخراج البايتات من الأرقام العشرية
 local _B = {}
 for i = 1, #_N do
     local v = _N[i] - 1000000000
@@ -490,46 +326,28 @@ for i = 1, #_N do
     _B[(i-1)*4+4] = v % 256
 end
 
--- فك التشفير (عكس العملية بالترتيب المعاكس)
 local _out = {}
 for i = 1, #_B do
     local b = _B[i]
-    
-    -- 4 معكوس: تدوير يمين 3
     b = ((b >> 3) | (b << 5)) & 0xFF
-    
-    -- 3 معكوس: XOR مع المفتاح
     b = b ~ _K[((i-1) % _KL) + 1]
-    
-    -- 2 معكوس: XOR مع الموقع
     b = b ~ ((i * 17) % 256)
-    
-    -- 1 معكوس: طرح الإضافة
     b = (b - ((i * 31) % 256)) % 256
-    
     _out[i] = string.char(b)
 end
 
 local _decoded = table.concat(_out)
--- إزالة أي بايتات فارغة في نهاية النص
 _decoded = _decoded:gsub("%z+$", "")
 
--- تنفيذ السكربت
 local _fn = loadstring or load
 if _fn then
-    local _ok, _err = pcall(function()
-        _fn(_decoded)()
-    end)
-    if not _ok then
-        warn("[Protected Script Error]: " .. tostring(_err))
-    end
+    pcall(function() _fn(_decoded)() end)
 else
-    error("Executor does not support loadstring")
+    error("No loadstring")
 end
 `;
 }
 
-// دالة التشفير الرئيسية
 async function encryptScript() {
   const input = document.getElementById('inputArea').value.trim();
   const btn = document.getElementById('encryptBtn');
@@ -547,19 +365,10 @@ async function encryptScript() {
   try {
     await new Promise(r => setTimeout(r, 300));
     
-    // 1. توليد مفتاح عشوائي
     const key = generateRandomKey(32);
-    
-    // 2. تحويل السكربت إلى بايتات
     let dataBytes = textToBytes(input);
-    
-    // 3. تطبيق XOR متقدم
     dataBytes = advancedXor(dataBytes, key);
-    
-    // 4. تحويل إلى أرقام عشرية
     const numbers = bytesToNumbers(dataBytes);
-    
-    // 5. بناء السكربت النهائي
     const finalScript = buildLuaPayload(numbers, key);
     
     output.value = finalScript;
@@ -574,7 +383,6 @@ async function encryptScript() {
   }
 }
 
-// نسخ السكربت المشفر
 function copyOutput() {
   const output = document.getElementById('outputArea');
   const btn = document.getElementById('copyBtn');
@@ -597,47 +405,27 @@ function copyOutput() {
   });
 }
 
-// مسح الكل
 function clearAll() {
   document.getElementById('inputArea').value = '';
   document.getElementById('outputArea').value = '';
 }
 
-// مثال
 function pasteExample() {
-  document.getElementById('inputArea').value = `-- مثال سكربت Lua
-print("مرحبا بالعالم")
-local counter = 0
-for i = 1, 10 do
-    counter = counter + i
-end
-print("المجموع: " .. counter)
-
-local function greet(name)
-    return "أهلاً " .. name
-end
-
-print(greet("مستخدم"))`;
+  document.getElementById('inputArea').value = `print("Hello World")
+local x = 10
+print(x * 2)`;
 }
 
-// إظهار إشعار
 function showNotification(text, type = 'success') {
   const notif = document.getElementById('notification');
   const notifText = document.getElementById('notifText');
-  
   notifText.textContent = text;
   notif.className = 'notification ' + type + ' show';
-  
-  setTimeout(() => {
-    notif.classList.remove('show');
-  }, 2500);
+  setTimeout(() => notif.classList.remove('show'), 2500);
 }
 
-// اختصار Ctrl+Enter
 document.getElementById('inputArea').addEventListener('keydown', (e) => {
-  if (e.ctrlKey && e.key === 'Enter') {
-    encryptScript();
-  }
+  if (e.ctrlKey && e.key === 'Enter') encryptScript();
 });
 </script>
 
